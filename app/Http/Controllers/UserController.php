@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\User;
+use DB;
+// use Laravel\Lumen\Routing\Controller as BaseController;
+
+use App\Models\Travel;
+use App\Models\User;
+// use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -45,9 +53,28 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        // dd("HAIIII");
+        $user_id = auth('api')->user()->email;
+        dd($user_id);
+        // $post = DB::select("SELECT * from users where nim=?", [$user_id]);
+        // $classrooms = User::where('nim', auth('api')->user()->nim)
+        //                 // ->select('classroom_id')
+        //                 ->get();
+        $post = User::where('email', $user_id)->get();
+        if ($post) {
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Data My Setting!',
+                'setting'      => $post
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post Tidak Ditemukan!',
+            ], 404);
+        }
     }
 
     /**
